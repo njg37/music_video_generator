@@ -1,0 +1,63 @@
+# Music Video Generator
+
+This project creates a Flask-based web application that generates music videos based on uploaded audio files and optional images. It uses various tools for audio analysis, waveform visualization, and video creation.
+
+## Features
+
+- Upload audio files (.mp3, .wav, .m4a)
+- Optionally upload images for custom visuals
+- Apply different themes to the generated video
+- Generate high-quality music videos with waveform visualizations
+- Download the generated video
+
+## Installation
+
+To run this project locally:
+
+1. Clone the repository:
+git clone https://github.com/njg37/music_video_generator.git
+
+
+2. Install Python dependencies:
+pip install -r requirements.txt
+
+
+3. Set up a virtual environment:
+python -m venv venv source venv/bin/activate # On Windows, use venv\Scripts\activate
+
+
+4. Run the Flask application:
+python app.py
+
+
+## Usage
+
+1. Open a web browser and navigate to `http://localhost:5000`.
+2. Select an audio file to upload.
+3. Optionally select an image file for custom visuals.
+4. Choose a theme for the video.
+5. Click "Upload" to start the video generation process.
+6. Once complete, download your generated music video.
+
+## Technologies Used
+
+- Flask: Web framework
+- Werkzeug: File handling utilities
+- OpenCV: Image processing
+- MoviePy: Video editing
+- Pydub: Audio manipulation
+- Matplotlib: Waveform visualization
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Flask Documentation](https://flask.palletsprojects.com/en/2.0.x/)
+- [MoviePy Documentation](https://moviepy.readthedocs.io/en/latest/)
+- [OpenCV Documentation](https://docs.opencv.org/4.x/d6/d00/tutorial_py_basic_ops.html)
