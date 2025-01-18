@@ -1,16 +1,19 @@
 from flask import Flask, request, render_template, send_from_directory
 from werkzeug.utils import secure_filename
 import os
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend for matplotlib
 from utils.audio_analysis import analyze_audio
 from utils.visual_effects import create_waveform_visual
 from utils.video_generator import generate_video
+from datetime import datetime
 
 app = Flask(__name__)
 
 # Configure upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'output'
-ALLOWED_EXTENSIONS = {'mp3', 'wav', 'm4a'}
+ALLOWED_EXTENSIONS = {'mp3', 'wav', 'm4a', 'jpg', 'jpeg', 'png', 'gif'}
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['OUTPUT_FOLDER'] = OUTPUT_FOLDER
@@ -26,45 +29,49 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        # Handle music file upload
-        file = request.files.get('audio')
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(filepath)
+        audio_file = request.files.get('audio')
+        image_file = request.files.get('image')  # Optional image upload
+
+        # Validate audio file
+        if audio_file and allowed_file(audio_file.filename):
+            audio_filename = secure_filename(audio_file.filename)
+            audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], audio_filename)
+            audio_file.save(audio_filepath)
+            print(f"Audio file saved to: {audio_filepath}")
 
             try:
-                # Analyze the audio file (tempo, beats, waveform)
-                tempo, beats, waveform = analyze_audio(filepath)
+                # Analyze the audio file
+                tempo, beats, waveform = analyze_audio(audio_filepath)
+                sr = 22050  # Pass dynamically if `analyze_audio` provides it
 
-                # Create visual based on the audio
-                visual_image_path = os.path.join('assets', 'waveform.png')
-                os.makedirs('assets', exist_ok=True)  # Ensure assets directory exists
-                create_waveform_visual(waveform, 22050)
+                # Validate and handle image file
+                if image_file and allowed_file(image_file.filename):
+                    image_filename = secure_filename(image_file.filename)
+                    visual_image_path = os.path.join(app.config['UPLOAD_FOLDER'], image_filename)
+                    image_file.save(visual_image_path)
+                    print(f"Uploaded image saved to: {visual_image_path}")
+                else:
+                    visual_image_path = os.path.join('assets', 'waveform.png')
+                    create_waveform_visual(waveform, sr, output_path=visual_image_path)
+                    print(f"Generated waveform image saved to: {visual_image_path}")
 
-                # Generate video with audio and visual
-                video_filename = 'music_video.mp4'
+                # Generate video
+                video_filename = f"music_video_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
                 video_output = os.path.join(app.config['OUTPUT_FOLDER'], video_filename)
-                generate_video(filepath, visual_image_path, video_output)
+                generate_video(audio_filepath, visual_image_path, video_output)
+                print(f"Generated video saved to: {video_output}")
 
-                # Debugging: Check paths
-                print("Output folder absolute path:", os.path.abspath(app.config['OUTPUT_FOLDER']))
-                print("Generated video file path:", video_output)
-
-                # Ensure the file exists before returning the download link
                 if os.path.exists(video_output):
                     return f"Video generated successfully! You can download it from <a href='/download/{video_filename}'>here</a>."
                 else:
                     return "Error: Video file not generated. Please check the logs."
 
             except Exception as e:
-                # Handle any exceptions and log errors
                 print(f"Error during processing: {e}")
                 return "An error occurred during video generation. Please try again."
-
         else:
-            return "Invalid file type. Please upload a .mp3, .wav, or .m4a file."
-    
+            return "Invalid file type. Please upload a .mp3, .wav, .m4a, or a valid image file."
+
     return render_template('index.html')
 
 @app.route('/download/<filename>')

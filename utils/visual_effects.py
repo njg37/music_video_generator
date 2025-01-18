@@ -3,13 +3,14 @@ import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 
-def create_waveform_visual(audio, sr, output_path="assets/waveform.png"):
+def create_waveform_visual(audio, sr, theme="abstract", output_path="assets/waveform.png"):
     """
-    Creates a waveform visual from audio data and saves it to the specified location.
+    Creates a themed waveform visual from audio data and saves it to the specified location.
 
     Parameters:
         audio (numpy.ndarray): The audio signal array.
         sr (int): The sample rate of the audio signal.
+        theme (str): The visual theme ('abstract', 'nature', 'retro').
         output_path (str): The file path where the waveform image will be saved.
 
     Raises:
@@ -21,17 +22,26 @@ def create_waveform_visual(audio, sr, output_path="assets/waveform.png"):
     if not isinstance(sr, int) or sr <= 0:
         raise ValueError("Sample rate (sr) must be a positive integer.")
     
+    # Define color schemes based on theme
+    color_schemes = {
+        "abstract": ("#6a0dad", "#ffffff"),
+        "nature": ("#228b22", "#d3f8e2"),
+        "retro": ("#ff4500", "#ffe4b5")
+    }
+    line_color, bg_color = color_schemes.get(theme, ("#000000", "#ffffff"))
+
     # Ensure the output directory exists
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    
+
     # Generate and save the waveform visual
-    plt.figure(figsize=(10, 4))
-    librosa.display.waveshow(audio, sr=sr)
-    plt.title("Audio Waveform")
-    plt.xlabel("Time (s)")
-    plt.ylabel("Amplitude")
+    plt.figure(figsize=(10, 4), facecolor=bg_color)
+    librosa.display.waveshow(audio, sr=sr, color=line_color)
+    plt.title("Audio Waveform", color=line_color)
+    plt.xlabel("Time (s)", color=line_color)
+    plt.ylabel("Amplitude", color=line_color)
+    plt.gca().set_facecolor(bg_color)
     plt.tight_layout()
-    plt.savefig(output_path)  # Save to the specified output path
+    plt.savefig(output_path, transparent=True)
     plt.close()
 
     print(f"Waveform visual saved to {output_path}")

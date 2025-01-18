@@ -4,24 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Video Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #4CAF50;
+        }
+
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="file"], select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        footer {
+            margin-top: 20px;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <h1>Music Video Generator</h1>
     <form action="/" method="POST" enctype="multipart/form-data">
         <label for="music">Upload your song (MP3 or WAV):</label>
-        <input type="file" id="music" name="audio" accept=".mp3,.wav" required><br><br>
+        <input type="file" id="music" name="audio" accept=".mp3,.wav" required>
 
         <label for="image">Upload your visual (PNG or JPG):</label>
-        <input type="file" id="image" name="image" accept=".png,.jpg" required><br><br>
+        <input type="file" id="image" name="image" accept=".png,.jpg" required>
 
         <label for="theme">Choose a visual theme:</label>
         <select id="theme" name="theme" required>
             <option value="abstract">Abstract</option>
             <option value="nature">Nature</option>
             <option value="retro">Retro</option>
-        </select><br><br>
+        </select>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Generate Video</button>
     </form>
+
+    <footer>
+        <p>&copy; 2025 Music Video Generator. All rights reserved.</p>
+    </footer>
 </body>
 </html>
