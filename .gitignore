@@ -18,3 +18,4 @@ __pycache__/
 uploads
 assets
 output 
+env.json
