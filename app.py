@@ -7,8 +7,13 @@ from utils.audio_analysis import analyze_audio
 from utils.visual_effects import create_waveform_visual
 from utils.video_generator import generate_video
 from datetime import datetime
+from flask_cors import CORS
 
+# Initialize the Flask app first
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 # Configure upload folder and allowed extensions
 UPLOAD_FOLDER = 'uploads'
